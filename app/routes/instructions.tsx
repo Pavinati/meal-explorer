@@ -7,6 +7,7 @@ import { DefaultThumbnail } from "~/components/DefaultThumbnail";
 import { Spinner } from "~/components/Spinner";
 import { Tag } from "~/components/Tag";
 import { YouTubeIframe } from "~/components/YouTubeIframe";
+import { FavoriteButton } from "~/components/FavoriteButton";
 
 export default function Instructions() {
   const [params] = useSearchParams();
@@ -50,7 +51,10 @@ export default function Instructions() {
       ) : (
         <DefaultThumbnail />
       )}
-      <div className="text-xl font-bold">{meal.name}</div>
+      <div className="flex flex-row">
+        <FavoriteButton meal={meal} />
+        <div className="content-center text-xl font-bold">{meal.name}</div>
+      </div>
       <div className="flex flex-wrap gap-2">
         {meal.tags.map((tag) => (
           <Tag key={tag} value={tag} />

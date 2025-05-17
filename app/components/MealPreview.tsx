@@ -1,5 +1,6 @@
 import type { Meal } from "~/types";
 import { DefaultThumbnail } from "~/components/DefaultThumbnail";
+import { FavoriteButton } from "./FavoriteButton";
 import { Tag } from "~/components/Tag";
 
 type MealPreviewProps = {
@@ -8,7 +9,10 @@ type MealPreviewProps = {
 
 export function MealPreview({ meal }: MealPreviewProps) {
   return (
-    <div className="flex flex-col gap-1 leading-tight">
+    <div className="relative flex flex-col gap-1 leading-tight">
+      <div className="absolute top-0 right-0">
+        <FavoriteButton meal={meal} />
+      </div>
       {meal.thumb ? (
         <img
           className="rounded-md"

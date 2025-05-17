@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router";
 
 import type { Meal } from "~/types";
+import { listFavoriteMeals } from "~/favorite-manager";
 import { searchMeal } from "~/themealdb-client";
 import { MealPreview } from "~/components/MealPreview";
 import { Spinner } from "~/components/Spinner";
@@ -20,24 +21,7 @@ export default function Meals() {
   }, [searchedMeal]);
 
   if (!searchedMeal) {
-    return (
-      <div className="mt-5 text-center">
-        <div className="text-xl">Welcome to the meal explorer app!</div>
-        <div>Explore wonderful meals!</div>
-        <div className="text-sm text-gray-400">
-          Powered by{" "}
-          <a
-            className="text-blue-600 underline"
-            href="https://www.themealdb.com"
-            target="_blank"
-            rel="nofollow"
-          >
-            themealdb.com
-          </a>{" "}
-          APIs.
-        </div>
-      </div>
-    );
+    return <FavoriteMeals />;
   }
 
   if (meals === "Loading") {
@@ -54,19 +38,40 @@ export default function Meals() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-x-2 gap-y-4 text-gray-700 md:grid-cols-5 md:gap-8">
-        {meals.map((meal) => (
-          <Link
-            key={meal.id}
-            to={{
-              pathname: "/instructions",
-              search: `?id=${meal.id}`,
-            }}
-          >
-            <MealPreview meal={meal} />
-          </Link>
-        ))}
-      </div>
+      <MealPreviewGid meals={meals} />
+    </div>
+  );
+}
+
+function FavoriteMeals() {
+  const meals = listFavoriteMeals();
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="text-xl font-bold">Favorites</div>
+      {meals.length > 0 ? (
+        <MealPreviewGid meals={meals} />
+      ) : (
+        <div>No favorite meals saved yet, add some for ease of access!</div>
+      )}
+    </div>
+  );
+}
+
+function MealPreviewGid({ meals }: { meals: Meal[] }) {
+  return (
+    <div className="grid grid-cols-2 gap-x-2 gap-y-4 text-gray-700 md:grid-cols-5 md:gap-8">
+      {meals.map((meal) => (
+        <Link
+          key={meal.id}
+          to={{
+            pathname: "/instructions",
+            search: `?id=${meal.id}`,
+          }}
+        >
+          <MealPreview meal={meal} />
+        </Link>
+      ))}
     </div>
   );
 }
